@@ -1,33 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-
+import { Routes, Route, Navigate } from 'react-router-dom'
+import Register from './Pages/Register/Register'
+import Chat from './Pages/Chat/Chat'
+import Login from './Pages/Login/Login'
+import Poll from './Pages/Poll/Poll'
 function App() {
-  const [count, setCount] = useState(0)
+
+  const user = JSON.parse(localStorage.getItem("user"))
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Routes>
+        {user && <Route path="/" exact element={<Chat />} />}
+        {user && <Route path="/poll" exact element={<Poll />} />}
+        {user && <Route path="/register" exact element={<Navigate replace to='/' />} />}
+        {user && <Route path="/login" exact element={<Navigate replace to='/' />} />}
+        <Route path="/register" exact element={<Register />} />
+        <Route path="/login" exact element={<Login />} />
+        <Route path="/" exact element={<Navigate replace to='/login' />} />
+        <Route path="/poll" exact element={<Navigate replace to='/login' />} />
+      </Routes>
     </>
   )
 }
