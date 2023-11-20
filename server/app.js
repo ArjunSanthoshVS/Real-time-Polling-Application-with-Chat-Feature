@@ -6,6 +6,7 @@ const logger = require('morgan');
 const connection = require('./Database/DB')
 const userRouter = require('./routes/userRoute');
 const chatRouter = require('./routes/chatRoute');
+const pollRouter = require('./routes/pollRoute');
 const cors = require('cors')
 const socket = require('socket.io')
 
@@ -22,10 +23,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors({ origin: " http://127.0.0.1:5173" }))
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+}))
 
 app.use('/', userRouter);
 app.use('/chat', chatRouter);
+app.use('/poll', pollRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -49,7 +55,7 @@ const server = app.listen(3000, () =>
 
 const io = socket(server, {
   cors: {
-    origin: "http://127.0.0.1:5173",
+    origin: "http://localhost:5173",
     credentials: true,
   },
 });
@@ -71,6 +77,6 @@ io.on("connection", (socket) => {
   socket.on("vote", (data) => {
     io.emit('update-votes', { index: data.index, votes: data.votes });
   });
-  
+
 });
 module.exports = app;

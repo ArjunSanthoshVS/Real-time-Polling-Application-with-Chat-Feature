@@ -8,10 +8,11 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(email,password);
         try {
             const response = await axios.post("http://localhost:3000/login", { email, password })
             localStorage.setItem("user", JSON.stringify(response.data));
-            window.location.reload()
+            window.location='/'
         } catch (error) {
             console.log(error)
         }
